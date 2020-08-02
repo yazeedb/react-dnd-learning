@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import * as d from './initial-data';
 import { Task } from './Task';
@@ -27,11 +28,19 @@ export const Column: FC<ColumnProps> = ({ column, tasks }) => {
     <Container>
       <Title>{column.title}</Title>
 
-      <TaskList>
-        {tasks.map((t) => (
-          <Task task={t} key={t.id} />
-        ))}
-      </TaskList>
+      <Droppable droppableId={column.id}>
+        {(dropProvided) => (
+          <TaskList
+            ref={dropProvided.innerRef}
+            {...dropProvided.droppableProps}
+          >
+            {tasks.map((t, index) => (
+              <Task task={t} index={index} key={t.id} />
+            ))}
+            {dropProvided.placeholder}
+          </TaskList>
+        )}
+      </Droppable>
     </Container>
   );
 };
